@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 3.21)
+
+set(MC_AUDIOSTUDIO_VERSION_MAJOR 1)
+set(MC_AUDIOSTUDIO_VERSION_MINOR 0)
+set(MC_AUDIOSTUDIO_VERSION_PATCH 0)
+set(MC_AUDIOSTUDIO_VERSION ${MC_AUDIOSTUDIO_VERSION_MAJOR}.${MC_AUDIOSTUDIO_VERSION_MINOR}.${MC_AUDIOSTUDIO_VERSION_PATCH})
+
+project(McAudioStudio
+    VERSION ${MC_AUDIOSTUDIO_VERSION}
+    DESCRIPTION "McAudioStudio Project"
+    HOMEPAGE_URL "https://github.com/mrcao20/McAudioStudio"
+    LANGUAGES CXX)
+
+if(MSVC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
+endif()
+
+# 不需要小写的QT宏
+add_definitions(-DQT_NO_KEYWORDS)
+
+if(!CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+if(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug"))
+    add_definitions(-DQT_MESSAGELOGCONTEXT)
+endif()
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Qt6 COMPONENTS Core Qml Quick Multimedia REQUIRED)
+
+set(CMAKE_DEBUG_POSTFIX "d")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+set(MC_BUILD_TYPE SHARED)
+set(MC_APP_NAME AudioStudio)
+
+add_subdirectory(AudioStudioCore)
+if(WIN32)
+    add_subdirectory(Windows)
+elseif(ANDROID)
+    add_subdirectory(Android)
+endif()
