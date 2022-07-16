@@ -23,22 +23,19 @@
  */
 #pragma once
 
-#include "../IMcEnvelope.h"
+#include "../McGlobal.h"
 
-MC_FORWARD_DECL_PRIVATE_DATA(McBellEnvelope)
+MC_FORWARD_DECL_PRIVATE_DATA(McAudioPlayer)
 
-class McBellEnvelope : public IMcEnvelope
+class McAudioPlayer : public QObject
 {
+    Q_OBJECT
 public:
-    McBellEnvelope() noexcept;
-    explicit McBellEnvelope(qreal tau) noexcept;
+    McAudioPlayer() noexcept;
+    ~McAudioPlayer();
 
-    void change(qreal tau) noexcept;
-
-    qreal getAmplitude(qreal timeIndexSeconds) noexcept override;
+    Q_INVOKABLE void play() noexcept;
 
 private:
-    MC_DECL_PRIVATE(McBellEnvelope)
+    MC_DECL_PRIVATE(McAudioPlayer)
 };
-
-MC_DECL_POINTER(McBellEnvelope)

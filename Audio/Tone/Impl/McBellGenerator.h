@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#pragma once
 
-#include "AudioStudioCore/McGlobal.h"
+#include "../IMcToneGenerator.h"
 
-int main(int argc, char *argv[])
+/*!
+ * \brief The McBellGenerator class
+ * 钟声生成器
+ */
+MC_FORWARD_DECL_PRIVATE_DATA(McBellGenerator)
+
+class McBellGenerator : public IMcToneGenerator
 {
-    init();
-    QGuiApplication app(argc, argv);
+public:
+    McBellGenerator(qreal fm_Hz, int I0, qreal tau) noexcept;
+    ~McBellGenerator();
 
-    QQmlApplicationEngine engine;
-    const QUrl url(u"qrc:/McAudioStudio/Windows/main.qml"_qs);
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
-    engine.load(url);
+    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
 
-    return app.exec();
-}
+private:
+    MC_DECL_PRIVATE(McBellGenerator)
+};
+
+MC_DECL_POINTER(McBellGenerator)

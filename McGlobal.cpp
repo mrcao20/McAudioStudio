@@ -21,25 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include "McGlobal.h"
 
-#include "../IMcToneGenerator.h"
+#include <QtQml/qqml.h>
 
-/*!
- * \brief The McBellGenerator class
- * 钟声生成器
- */
-MC_FORWARD_DECL_PRIVATE_DATA(McBellGenerator)
+#include "Audio/McAudioPlayer.h"
 
-class McBellGenerator : public IMcToneGenerator
+void init() noexcept
 {
-public:
-    McBellGenerator(qreal fm_Hz, int I0, qreal tau) noexcept;
-
-    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
-
-private:
-    MC_DECL_PRIVATE(McBellGenerator)
-};
-
-MC_DECL_POINTER(McBellGenerator)
+    qmlRegisterType<McAudioPlayer>("McAudioPlayer", 1, 0, "McAudioPlayer");
+}

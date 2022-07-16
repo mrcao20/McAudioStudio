@@ -46,6 +46,8 @@ McADSREnvelope::McADSREnvelope(qreal durationSeconds) noexcept
     change(durationSeconds);
 }
 
+McADSREnvelope::~McADSREnvelope() {}
+
 void McADSREnvelope::change(qreal durationSeconds) noexcept
 {
     if (durationSeconds <= 0.0) {

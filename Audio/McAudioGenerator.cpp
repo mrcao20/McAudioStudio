@@ -23,32 +23,12 @@
  */
 #include "McAudioGenerator.h"
 
-#include <QAudioDevice>
-#include <QCoreApplication>
-#include <QDebug>
-#include <QDir>
-#include <QFile>
-#include <QMediaDevices>
-#include <QStandardPaths>
-#include <QWaveDecoder>
-#include <QtEndian>
-
 #include "Envelope/Impl/McADSREnvelope.h"
 #include "McSampler.h"
 #include "Tone/Impl/McViolinGenerator.h"
 
-QString McAudioGenerator::generateData()
+QByteArray McAudioGenerator::generateData(const QAudioFormat &format) noexcept
 {
-    QAudioDevice device = QMediaDevices::defaultAudioOutput();
-    QAudioFormat format = device.preferredFormat();
-
-    QString path = QDir(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first())
-                       .absoluteFilePath("test.wav");
-    QFile file(path);
-    qDebug() << "open:" << file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-    QWaveDecoder wav(&file, format);
-    qDebug() << "open:" << wav.open(QIODevice::WriteOnly);
-
     QVector<McTone> tones;
     tones.append({293, 0.5});
     tones.append({349, 0.5});
@@ -202,10 +182,8 @@ QString McAudioGenerator::generateData()
     auto sampler = McSamplerPtr::create(format);
     for (auto tone : tones) {
         adsrEnvelope->change(tone.duration);
-        sampler->sample(tone, pureTone, adsrEnvelope, 0.75);
+        sampler->sample(tone, pureTone, adsrEnvelope, 1.0);
     }
-    wav.write(sampler->sampleData());
-    wav.close();
 
-    return path;
+    return sampler->sampleData();
 }

@@ -21,16 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
-#include <QObject>
-#include <QtQml/qqml.h>
+#include "McGlobal.h"
 
-#include "Tone/McTone.h"
-
-class McAudioGenerator : public QObject
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-public:
-    Q_INVOKABLE QString generateData();
-};
+    init();
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    const QUrl url(u"qrc:/McAudioStudio/main.qml"_qs);
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+        &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
+}

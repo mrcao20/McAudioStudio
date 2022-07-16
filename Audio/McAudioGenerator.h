@@ -23,15 +23,12 @@
  */
 #pragma once
 
-#include <McCore/McMacroGlobal.h>
+#include "../McGlobal.h"
 
-#include "McConfig.h"
+class QAudioFormat;
 
-#define MC_AUDIOSTUDIO_VERSION \
- QT_VERSION_CHECK(MC_AUDIOSTUDIO_VERSION_MAJOR, MC_AUDIOSTUDIO_VERSION_MINOR, MC_AUDIOSTUDIO_VERSION_PATCH)
-
-#if defined(MC_AUDIOSTUDIOCORE_LIBRARY)
-# define MC_AUDIOSTUDIOCORE_EXPORT Q_DECL_EXPORT
-#else
-# define MC_AUDIOSTUDIOCORE_EXPORT Q_DECL_IMPORT
-#endif
+class McAudioGenerator
+{
+public:
+    QByteArray generateData(const QAudioFormat &format) noexcept;
+};

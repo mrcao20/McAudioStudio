@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#pragma once
 
-#include "AudioStudioCore/McGlobal.h"
+#include "../IMcEnvelope.h"
 
-int main(int argc, char *argv[])
+MC_FORWARD_DECL_PRIVATE_DATA(McADSREnvelope)
+
+//! Attack, Decay, Sustain, Release (ADSR) Envelope: https://en.wikipedia.org/wiki/Envelope_(music)
+class McADSREnvelope : public IMcEnvelope
 {
-    init();
-    QGuiApplication app(argc, argv);
+public:
+    McADSREnvelope() noexcept;
+    explicit McADSREnvelope(qreal durationSeconds) noexcept;
+    ~McADSREnvelope();
 
-    QQmlApplicationEngine engine;
-    const QUrl url(u"qrc:/McAudioStudio/Android/main.qml"_qs);
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
-    engine.load(url);
+    void change(qreal durationSeconds) noexcept;
 
-    return app.exec();
-}
+    qreal getAmplitude(qreal timeIndexSeconds) noexcept override;
+
+private:
+    MC_DECL_PRIVATE(McADSREnvelope)
+};
+
+MC_DECL_POINTER(McADSREnvelope)

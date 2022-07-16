@@ -21,11 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "McGlobal.h"
+#include "McBellGenerator.h"
 
-#include "Audio/McAudioGenerator.h"
+MC_DECL_PRIVATE_DATA(McBellGenerator)
+qreal fm_Hz;
+int I0;
+qreal tau;
+qreal theta_m;
+qreal theta_c;
+MC_DECL_PRIVATE_DATA_END
 
-void init() noexcept
+McBellGenerator::McBellGenerator(qreal fm_Hz, int I0, qreal tau) noexcept
 {
-    qmlRegisterType<McAudioGenerator>("AudioStudioCore", 1, 0, "AudioGenerator");
+    MC_NEW_PRIVATE_DATA(McBellGenerator);
+
+    d->fm_Hz = fm_Hz;
+    d->I0 = I0;
+    d->tau = tau;
+    d->theta_m = -M_PI / 2;
+    d->theta_c = -M_PI / 2;
+}
+
+McBellGenerator::~McBellGenerator() {}
+
+//! Bells 1-6, https://web.eecs.utk.edu/~qi/ece505/project/proj1.pdf
+qreal McBellGenerator::generate(const McTone &tone, qreal timeIndexSeconds) noexcept
+{
+    qreal fc_Hz = tone.freq;
+    qreal At = exp(-timeIndexSeconds / d->tau);
+    qreal It = d->I0 * exp(-timeIndexSeconds / d->tau);
+    qreal result = At
+                   * cos(2 * M_PI * fc_Hz * timeIndexSeconds
+                         + It * cos(2 * M_PI * d->fm_Hz * timeIndexSeconds + d->theta_m) + d->theta_c);
+
+    return result;
 }

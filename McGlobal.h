@@ -27,4 +27,4 @@
 
 #include "McMacroGlobal.h"
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+void init() noexcept;

@@ -38,6 +38,8 @@ McBellEnvelope::McBellEnvelope(qreal tau) noexcept
     change(tau);
 }
 
+McBellEnvelope::~McBellEnvelope() {}
+
 void McBellEnvelope::change(qreal tau) noexcept
 {
     d->tau = tau;
