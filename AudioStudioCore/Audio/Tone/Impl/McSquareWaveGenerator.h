@@ -23,8 +23,16 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcToneGenerator.h"
 
-#include "McMacroGlobal.h"
+/*!
+ * \brief The McSquareWaveGenerator class
+ * 方波生成器
+ */
+class McSquareWaveGenerator : public IMcToneGenerator
+{
+public:
+    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
+};
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+MC_DECL_POINTER(McSquareWaveGenerator)

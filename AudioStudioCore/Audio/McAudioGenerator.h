@@ -26,11 +26,7 @@
 #include <QObject>
 #include <QtQml/qqml.h>
 
-struct McTone
-{
-    qreal freq{1}; //!< 音阶的频率，不能为0
-    qreal duration{1}; //!< 当前音阶的持续时间，单位秒
-};
+#include "Tone/McTone.h"
 
 class McAudioGenerator : public QObject
 {

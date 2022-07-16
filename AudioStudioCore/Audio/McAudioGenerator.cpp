@@ -33,6 +33,10 @@
 #include <QWaveDecoder>
 #include <QtEndian>
 
+#include "Envelope/Impl/McADSREnvelope.h"
+#include "McSampler.h"
+#include "Tone/Impl/McViolinGenerator.h"
+
 QString McAudioGenerator::generateData()
 {
     QAudioDevice device = QMediaDevices::defaultAudioOutput();
@@ -193,76 +197,14 @@ QString McAudioGenerator::generateData()
     tones.append({349, 0.2});
     tones.append({392, 2.8});
 
-    qint64 totalDurationUs = 0;
+    auto pureTone = McViolinGeneratorPtr::create();
+    auto adsrEnvelope = McADSREnvelopePtr::create();
+    auto sampler = McSamplerPtr::create(format);
     for (auto tone : tones) {
-        totalDurationUs += (tone.duration * 1000000);
+        adsrEnvelope->change(tone.duration);
+        sampler->sample(tone, pureTone, adsrEnvelope, 0.75);
     }
-    const int channelBytes = format.bytesPerSample();
-    const int sampleBytes = format.channelCount() * channelBytes;
-    qint64 totalLength = format.bytesForDuration(totalDurationUs);
-
-    Q_ASSERT(totalLength % sampleBytes == 0);
-    Q_UNUSED(sampleBytes); // suppress warning in release builds
-
-    qreal frontDuration = 0.1; //!< 起始音量到全音量所经历时间：s
-    qreal normalDuration = 0.4; //!< 全音量持续时间：s
-    qreal backDuration = 1.5; //!< 全音量到结束音量所经历时间：s
-
-    QByteArray buffer(totalLength, 0);
-    unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer.data());
-    qreal phase = 0.0;
-    const qreal d = 2 * M_PI / format.sampleRate();
-    for (auto tone : tones) {
-        qint64 simples = format.sampleRate() * tone.duration;
-
-        qint64 frontSimples = format.sampleRate() * frontDuration;
-        qreal frontDelta = 0.2 / frontSimples;
-        qint64 normalSimples = format.sampleRate() * normalDuration;
-        qint64 backSimples = format.sampleRate() * backDuration;
-        qreal backDelta = 0.8 / backSimples;
-
-        qreal phaseStep = d * tone.freq;
-        qreal volume = 0.8;
-        for (int i = 0; i < simples; ++i) {
-            const qreal x = qSin(phase) * volume;
-            for (int i = 0; i < format.channelCount(); ++i) {
-                switch (format.sampleFormat()) {
-                case QAudioFormat::UInt8:
-                    qToLittleEndian<quint8>(128 * volume + 127 * x, ptr);
-                    break;
-                case QAudioFormat::Int16:
-                    qToLittleEndian<qint16>(x * 32767, ptr);
-                    break;
-                case QAudioFormat::Int32:
-                    qToLittleEndian<qint32>(x * std::numeric_limits<qint32>::max(), ptr);
-                    break;
-                case QAudioFormat::Float:
-                    qToLittleEndian<float>(x, ptr);
-                    break;
-                default:
-                    break;
-                }
-
-                ptr += channelBytes;
-            }
-
-            phase += phaseStep;
-            while (phase > 2 * M_PI) {
-                phase -= 2 * M_PI;
-            }
-
-            if (frontSimples > 0) {
-                volume += frontDelta;
-                --frontSimples;
-            } else if (normalSimples > 0) {
-                --normalSimples;
-            } else if (backSimples > 0) {
-                volume -= backDelta;
-                --backSimples;
-            }
-        }
-    }
-    wav.write(buffer);
+    wav.write(sampler->sampleData());
     wav.close();
 
     return path;

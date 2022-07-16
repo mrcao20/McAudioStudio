@@ -23,8 +23,33 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include <QAudioFormat>
 
-#include "McMacroGlobal.h"
+#include "../McGlobal.h"
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+struct McTone;
+
+MC_FORWARD_DECL_CLASS(IMcToneGenerator)
+MC_FORWARD_DECL_CLASS(IMcEnvelope)
+
+MC_FORWARD_DECL_PRIVATE_DATA(McSampler)
+
+class McSampler
+{
+public:
+    explicit McSampler(const QAudioFormat &format) noexcept;
+    ~McSampler();
+
+    const QAudioFormat &format() const noexcept;
+    void setFormat(const QAudioFormat &newFormat) noexcept;
+
+    const QByteArray &sampleData() const noexcept;
+
+    void sample(const McTone &tone, const IMcToneGeneratorPtr &generator, const IMcEnvelopePtr &envelope,
+        qreal volume) noexcept;
+
+private:
+    MC_DECL_PRIVATE(McSampler)
+};
+
+MC_DECL_POINTER(McSampler)

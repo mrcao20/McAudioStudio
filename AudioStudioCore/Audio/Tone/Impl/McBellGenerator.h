@@ -23,8 +23,23 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcToneGenerator.h"
 
-#include "McMacroGlobal.h"
+/*!
+ * \brief The McBellGenerator class
+ * 钟声生成器
+ */
+MC_FORWARD_DECL_PRIVATE_DATA(McBellGenerator)
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+class McBellGenerator : public IMcToneGenerator
+{
+public:
+    McBellGenerator(qreal fm_Hz, int I0, qreal tau) noexcept;
+
+    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
+
+private:
+    MC_DECL_PRIVATE(McBellGenerator)
+};
+
+MC_DECL_POINTER(McBellGenerator)

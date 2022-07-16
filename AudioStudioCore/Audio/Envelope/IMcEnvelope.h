@@ -23,8 +23,13 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../../McGlobal.h"
 
-#include "McMacroGlobal.h"
+class IMcEnvelope
+{
+    MC_DEFINE_INTERFACE(IMcEnvelope)
+public:
+    virtual qreal getAmplitude(qreal timeIndexSeconds) noexcept = 0;
+};
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+MC_DECL_POINTER(IMcEnvelope)

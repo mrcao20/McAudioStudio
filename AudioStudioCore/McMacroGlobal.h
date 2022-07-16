@@ -23,7 +23,7 @@
  */
 #pragma once
 
-#include <QtCore/qglobal.h>
+#include <McCore/McMacroGlobal.h>
 
 #include "McConfig.h"
 

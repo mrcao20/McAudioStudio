@@ -37,6 +37,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 COMPONENTS Core Qml Quick Multimedia REQUIRED)
+find_package(McCore REQUIRED)
+
+include_directories(${McCore_INCLUDE_DIRS})
 
 set(CMAKE_DEBUG_POSTFIX "d")
 

@@ -23,8 +23,20 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../../McGlobal.h"
+#include "McTone.h"
 
-#include "McMacroGlobal.h"
+class IMcToneGenerator
+{
+    MC_DEFINE_INTERFACE(IMcToneGenerator)
+public:
+    /*!
+     * \brief generate 生成[-1.0, 1.0]之间的连续值
+     * \param tone 单个音阶
+     * \param timeIndexSeconds index/sampleRate
+     * \return
+     */
+    virtual qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept = 0;
+};
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+MC_DECL_POINTER(IMcToneGenerator)

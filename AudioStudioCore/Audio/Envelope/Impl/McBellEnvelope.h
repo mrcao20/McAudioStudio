@@ -23,8 +23,22 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcEnvelope.h"
 
-#include "McMacroGlobal.h"
+MC_FORWARD_DECL_PRIVATE_DATA(McBellEnvelope)
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+class McBellEnvelope : public IMcEnvelope
+{
+public:
+    McBellEnvelope() noexcept;
+    explicit McBellEnvelope(qreal tau) noexcept;
+
+    void change(qreal tau) noexcept;
+
+    qreal getAmplitude(qreal timeIndexSeconds) noexcept override;
+
+private:
+    MC_DECL_PRIVATE(McBellEnvelope)
+};
+
+MC_DECL_POINTER(McBellEnvelope)

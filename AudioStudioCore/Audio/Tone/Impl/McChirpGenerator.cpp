@@ -21,10 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include "McChirpGenerator.h"
 
-#include <McCore/McGlobal.h>
+qreal McChirpGenerator::generate(const McTone &tone, qreal timeIndexSeconds) noexcept
+{
+    qreal finalFrequencyHz = tone.freq * 10;
 
-#include "McMacroGlobal.h"
+    // modulate the frequency with time, linearly decreasing from initialFrequencyHz to finalFrequencyHz
+    qreal momentaryFrequencyHz = tone.freq + finalFrequencyHz / tone.duration * timeIndexSeconds;
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+    qreal tonePeriodSeconds = 1.0 / momentaryFrequencyHz;
+    qreal radians = timeIndexSeconds / tonePeriodSeconds * (2 * M_PI);
+    qreal result = sin(radians);
+
+    return result;
+}

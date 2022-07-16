@@ -23,8 +23,12 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcToneGenerator.h"
 
-#include "McMacroGlobal.h"
+class McChirpGenerator : public IMcToneGenerator
+{
+public:
+    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
+};
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+MC_DECL_POINTER(McChirpGenerator)

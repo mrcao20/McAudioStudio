@@ -21,10 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include "McPureToneGenerator.h"
 
-#include <McCore/McGlobal.h>
+qreal McPureToneGenerator::generate(const McTone &tone, qreal timeIndexSeconds) noexcept
+{
+    qreal tonePeriodSeconds = 1.0 / tone.freq;
+    qreal radians = timeIndexSeconds / tonePeriodSeconds * (2 * M_PI);
+    qreal result = sin(radians);
 
-#include "McMacroGlobal.h"
-
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+    return result;
+}

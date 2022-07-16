@@ -23,8 +23,10 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include <QtGlobal>
 
-#include "McMacroGlobal.h"
-
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+struct McTone
+{
+    qreal freq{1.0}; //!< 音阶的频率，不能为0
+    qreal duration{1.0}; //!< 当前音阶的持续时间，单位秒
+};

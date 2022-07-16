@@ -23,8 +23,16 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcToneGenerator.h"
 
-#include "McMacroGlobal.h"
+/*!
+ * \brief The McViolinGenerator class
+ * 小提琴音色生成器
+ */
+class McViolinGenerator : public IMcToneGenerator
+{
+public:
+    qreal generate(const McTone &tone, qreal timeIndexSeconds) noexcept override;
+};
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+MC_DECL_POINTER(McViolinGenerator)

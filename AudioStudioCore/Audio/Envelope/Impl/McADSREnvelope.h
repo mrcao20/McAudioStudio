@@ -23,8 +23,23 @@
  */
 #pragma once
 
-#include <McCore/McGlobal.h>
+#include "../IMcEnvelope.h"
 
-#include "McMacroGlobal.h"
+MC_FORWARD_DECL_PRIVATE_DATA(McADSREnvelope)
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+//! Attack, Decay, Sustain, Release (ADSR) Envelope: https://en.wikipedia.org/wiki/Envelope_(music)
+class McADSREnvelope : public IMcEnvelope
+{
+public:
+    McADSREnvelope() noexcept;
+    explicit McADSREnvelope(qreal durationSeconds) noexcept;
+
+    void change(qreal durationSeconds) noexcept;
+
+    qreal getAmplitude(qreal timeIndexSeconds) noexcept override;
+
+private:
+    MC_DECL_PRIVATE(McADSREnvelope)
+};
+
+MC_DECL_POINTER(McADSREnvelope)

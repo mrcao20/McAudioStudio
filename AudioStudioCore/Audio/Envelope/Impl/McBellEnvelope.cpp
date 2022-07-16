@@ -21,10 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include "McBellEnvelope.h"
 
-#include <McCore/McGlobal.h>
+MC_DECL_PRIVATE_DATA(McBellEnvelope)
+qreal tau;
+MC_DECL_PRIVATE_DATA_END
 
-#include "McMacroGlobal.h"
+McBellEnvelope::McBellEnvelope() noexcept
+{
+    MC_NEW_PRIVATE_DATA(McBellEnvelope);
+}
 
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+McBellEnvelope::McBellEnvelope(qreal tau) noexcept
+    : McBellEnvelope()
+{
+    change(tau);
+}
+
+void McBellEnvelope::change(qreal tau) noexcept
+{
+    d->tau = tau;
+}
+
+qreal McBellEnvelope::getAmplitude(qreal timeIndexSeconds) noexcept
+{
+    qreal result = exp(-timeIndexSeconds / d->tau);
+
+    return result;
+}

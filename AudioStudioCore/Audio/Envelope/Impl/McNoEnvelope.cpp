@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#pragma once
+#include "McNoEnvelope.h"
 
-#include <McCore/McGlobal.h>
-
-#include "McMacroGlobal.h"
-
-MC_AUDIOSTUDIOCORE_EXPORT void init() noexcept;
+qreal McNoEnvelope::getAmplitude(qreal timeIndexSeconds) noexcept
+{
+    return 1.0;
+}
